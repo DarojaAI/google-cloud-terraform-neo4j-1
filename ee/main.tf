@@ -20,6 +20,7 @@ resource "google_compute_instance_template" "neo4j" {
     source_image = var.source_image
     disk_size_gb = var.disk_size
     disk_type    = "hyperdisk-balanced"
+    boot         = true
   }
 
   network_interface {
