@@ -34,8 +34,8 @@ else
   echo "Configuring membership in neo4j.conf..."
   COREMEMBERS=""
   INSTANCES=$(gcloud compute instance-groups list-instances $goog_cm_deployment_name-instance-group-manager --region us-central1 --format="value(NAME)")
-  for INSTANCE in $INSTANCES; do   
-    COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs[0].natIP)" --filter="name=( '$INSTANCE' )")
+  for INSTANCE in $INSTANCES; do
+    COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].networkIP)" --filter="name=( '$INSTANCE' )")
     COREMEMBERS+=":6000,"
   done
 
