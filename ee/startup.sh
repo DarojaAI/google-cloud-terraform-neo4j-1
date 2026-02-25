@@ -28,14 +28,14 @@ else
   echo "Running on multiple nodes."
   sed -i "s/#initial.dbms.default_primaries_count=1/initial.dbms.default_primaries_count=3/g" /etc/neo4j/neo4j.conf
 
-  IP=$(hostname -i)
-  sed -i "s/#server.default_advertised_address=localhost/server.default_advertised_address=$IP/g" /etc/neo4j/neo4j.conf
+  EXTERNALIP=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
+  sed -i "s/#server.default_advertised_address=localhost/server.default_advertised_address=$EXTERNALIP/g" /etc/neo4j/neo4j.conf
 
   echo "Configuring membership in neo4j.conf..."
   COREMEMBERS=""
   INSTANCES=$(gcloud compute instance-groups list-instances $goog_cm_deployment_name-instance-group-manager --region us-central1 --format="value(NAME)")
   for INSTANCE in $INSTANCES; do   
-    COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].networkIP)" --filter="name=( '$INSTANCE' )")
+    COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs[0].natIP)" --filter="name=( '$INSTANCE' )")
     COREMEMBERS+=":6000,"
   done
 
