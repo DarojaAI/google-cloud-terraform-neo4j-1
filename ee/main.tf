@@ -8,6 +8,12 @@ resource "google_service_account" "neo4j" {
   display_name = "${var.goog_cm_deployment_name}"
 }
 
+resource "google_project_iam_member" "neo4j_compute_viewer" {
+  project = var.project_id
+  role    = "roles/compute.viewer"
+  member  = "serviceAccount:${google_service_account.neo4j.email}"
+}
+
 ##########################################
 ####### Compute
 ##########################################
