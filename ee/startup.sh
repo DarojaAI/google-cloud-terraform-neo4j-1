@@ -25,16 +25,19 @@ sed -i "s/#server.default_listen_address=0.0.0.0/server.default_listen_address=0
 if [[ $nodeCount == 1 ]]; then
   echo "Running on a single node."
 else
-  echo "Running on multiple nodes.  Configuring membership in neo4j.conf..."
+  echo "Running on multiple nodes."
+  sed -i "s/#initial.dbms.default_primaries_count=1/initial.dbms.default_primaries_count=3/g" /etc/neo4j/neo4j.conf
 
+  IP=$(hostname -i)
+  sed -i "s/#server.default_advertised_address=localhost/server.default_advertised_address=$IP/g" /etc/neo4j/neo4j.conf
+
+  echo "Configuring membership in neo4j.conf..."
   COREMEMBERS=""
   INSTANCES=$(gcloud compute instance-groups list-instances $goog_cm_deployment_name-instance-group-manager --region us-central1 --format="value(NAME)")
-  for INSTANCE in $INSTANCES; do
+  for INSTANCE in $INSTANCES; do   
     COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].networkIP)" --filter="name=( '$INSTANCE' )")
     COREMEMBERS+=":6000,"
   done
-
-  echo COREMEMBERS1: $COREMEMBERS
 
   if [[ $${#COREMEMBERS} -eq 0 ]]; then
     echo Missing coreMembers. Exiting
@@ -42,7 +45,7 @@ else
   fi
 
   COREMEMBERS=$${COREMEMBERS::-1}
-  echo COREMEMBERS2: $COREMEMBERS
+  echo COREMEMBERS: $COREMEMBERS
 
   sed -i "s/#dbms.cluster.endpoints=localhost:6000,localhost:6001,localhost:6002/dbms.cluster.endpoints=$COREMEMBERS/g" /etc/neo4j/neo4j.conf
 fi
