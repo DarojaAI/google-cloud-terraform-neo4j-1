@@ -57,16 +57,6 @@ resource "google_compute_region_instance_group_manager" "neo4j" {
   version {
     instance_template = google_compute_instance_template.neo4j.id
   }
-
-  named_port {
-    name = "neo4j-http"
-    port = 7474
-  }
-
-  named_port {
-    name = "neo4j-bolt"
-    port = 7687
-  }
 }
 
 ##########################################
