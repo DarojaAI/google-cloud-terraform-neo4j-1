@@ -21,8 +21,6 @@ yum -y install neo4j-enterprise
 
 echo "Configuring network in neo4j.conf..."
 
-LBIP=$(gcloud compute addresses list --filter="name=('$goog_cm_deployment_name')" --format="value(address)")
-
 EXTERNALIP=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
 
 sed -i "s/#server.default_listen_address=0.0.0.0/server.default_listen_address=0.0.0.0/g" /etc/neo4j/neo4j.conf
