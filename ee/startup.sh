@@ -22,8 +22,15 @@ yum -y install neo4j-enterprise
 echo "Configuring network in neo4j.conf..."
 
 LBIP=$(gcloud compute addresses list --filter="name=('$goog_cm_deployment_name')" --format="value(address)")
+
 sed -i "s/#server.default_listen_address=0.0.0.0/server.default_listen_address=0.0.0.0/g" /etc/neo4j/neo4j.conf
 sed -i "s/#server.default_advertised_address=localhost/server.default_advertised_address=$LBIP/g" /etc/neo4j/neo4j.conf
+
+sed -i "s/#server.bolt.listen_address=:7687/server.bolt.listen_address=0.0.0.0:7687/g" /etc/neo4j/neo4j.conf
+sed -i "s/#server.bolt.advertised_address=:7687/server.bolt.advertised_address=$LBIP:7687/g" /etc/neo4j/neo4j.conf
+
+sed -i "s/#server.http.listen_address=:7474/server.http.listen_address=0.0.0.0:7474/g" /etc/neo4j/neo4j.conf
+sed -i "s/#server.http.advertised_address=:7474/server.http.advertised_address=$LBIP:7474/g" /etc/neo4j/neo4j.conf
 
 if [[ $nodeCount == 1 ]]; then
   echo "Running on a single node."
