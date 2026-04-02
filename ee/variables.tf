@@ -16,8 +16,7 @@ variable "goog_cm_deployment_name" {
 variable "source_image" {
   description = "Base image for the VM instance."
   type        = string
-  #default     = "projects/neo4j-mp-public/global/images/neo4j-enterprise-edition-v20260126"
-  default     = "projects/centos-cloud/global/images/centos-stream-10-v20260126"
+  default     = "projects/neo4j-mp-public/global/images/neo4j-enterprise-edition-v20260126"
 }
 
 ##########################################

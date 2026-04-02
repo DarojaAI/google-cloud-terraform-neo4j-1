@@ -42,7 +42,7 @@ spec:
           name: node_count
           title: Number of nodes
           subtext: Number of Neo4j nodes to deploy
-          tooltip: Node count must be 1 (standalone) or 3/5/7 (cluster)
+          tooltip: Node count must be 1 (standalone) or 3 (cluster)
           enumValueLabels:
             - label: "1"
               value: "1"
