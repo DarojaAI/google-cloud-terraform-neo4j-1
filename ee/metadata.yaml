@@ -57,7 +57,7 @@ spec:
       - name: node_count
         description: Number of Neo4j nodes to deploy
         varType: integer
-        defaultValue: 3
+        defaultValue: "3"
       - name: machine_type
         description: The machine type to create
         varType: string
