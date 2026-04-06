@@ -40,9 +40,9 @@ spec:
           tooltip: Node count must be 1 (standalone) or 3 (cluster)
           enumValueLabels:
             - label: "1"
-              value: "1"
+              value: 1
             - label: "3"
-              value: "3"
+              value: 3
         machine_type:
           name: machine_type
           title: Machine type
