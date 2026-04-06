@@ -50,20 +50,11 @@ else
 
   echo "Configuring membership in neo4j.conf..."
   COREMEMBERS=""
-  INSTANCES=$(gcloud compute instance-groups list-instances $goog_cm_deployment_name-instance-group-manager --region us-central1 --format="value(NAME)")
-  for INSTANCE in $INSTANCES; do
-    NODE_NAME="neo4j-${goog_cm_deployment_name}-$i"
-    #NODE_IP=$(getent hosts $NODE_NAME.c.$project_id.internal | awk '{ print $1 }')
-    NODE_IP=$(getent hosts $NODE_NAME.c.$project_id.internal | awk '{ print $1 }')
 
-    COREMEMBERS+=$NODE_IP
-    COREMEMBERS+=":6000,"
+  FOR i in $(seq 0 $(($nodeCount - 1))); do
+    NODE_NAME="${goog_cm_deployment_name}-instance-$i"
+    COREMEMBERS+="$NODE_IP:6000,"
   done
-
-  if [[ $${#COREMEMBERS} -eq 0 ]]; then
-    echo Missing coreMembers. Exiting
-    exit 1
-  fi
 
   # Remove trailing comma from the list of core members
   COREMEMBERS=$${COREMEMBERS::-1}
