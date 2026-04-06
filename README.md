@@ -35,7 +35,7 @@ If that looks good, you can run apply:
 ## Deleting your Deployment
 To delete your deployment you can either run:
 
-    terraform detroy
+    terraform destroy
 
 ## Debugging
 If the Neo4j Browser isn't coming up, there's a good chance something isn't right in your deployment.  One thing to investigate is serial output from the VM.  If that looks good, the next place to check out is `/var/log/neo4j/debug.log`.
