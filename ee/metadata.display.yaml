@@ -46,12 +46,6 @@ spec:
         machine_type:
           name: machine_type
           title: Machine type
-          xGoogleProperty:
-            type: ET_GCE_MACHINE_TYPE
-            zoneProperty: zones[0]
-            gceMachineType:
-              minCpu: 4
-              minRamGb: 16
         disk_size:
           name: disk_size
           title: Disk size in GB
