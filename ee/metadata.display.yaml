@@ -23,11 +23,6 @@ spec:
               value: projects/neo4j-mp-public/global/images/neo4j-enterprise-edition-v20260126
           xGoogleProperty:
             type: ET_GCE_DISK_IMAGE
-        region:
-          name: region
-          title: Region
-          xGoogleProperty:
-            type: ET_GCE_REGION
         zones:
           name: zones
           title: Zones
