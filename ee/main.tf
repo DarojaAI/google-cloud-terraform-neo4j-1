@@ -1,32 +1,19 @@
 provider "google" {
   project = var.project_id
-  region =  var.region
 }
 
-resource "google_service_account" "neo4j" {
-  account_id   = "${var.goog_cm_deployment_name}"
-  display_name = "${var.goog_cm_deployment_name}"
-}
-
-resource "google_project_iam_member" "neo4j_compute_viewer" {
-  project = var.project_id
-  role    = "roles/compute.viewer"
-  member  = "serviceAccount:${google_service_account.neo4j.email}"
-}
-
-##########################################
-####### Compute
-##########################################
-
-resource "google_compute_instance_template" "neo4j" {
-  name         = "${var.goog_cm_deployment_name}-instance-template"
+resource "google_compute_instance" "neo4j" {
+  count        = var.node_count
+  name         = "${var.goog_cm_deployment_name}-instance-${count.index}"
   machine_type = var.machine_type
+  zone         = var.zones[count.index]
 
-  disk {
-    source_image = var.source_image
-    disk_size_gb = var.disk_size
-    disk_type    = "hyperdisk-balanced"
-    boot         = true
+  boot_disk {
+    initialize_params {
+      image = var.source_image
+      size  = var.disk_size
+      type  = "hyperdisk-balanced"
+    }
   }
 
   network_interface {
@@ -37,31 +24,10 @@ resource "google_compute_instance_template" "neo4j" {
   }
 
   metadata_startup_script = templatefile("${path.module}/startup.sh", {
-    password                = var.password
-    nodeCount               = var.node_count
-    goog_cm_deployment_name = var.goog_cm_deployment_name
+    password  = var.password
+    nodeCount = var.node_count
   })
-
-   service_account {
-    email  = google_service_account.neo4j.email
-    scopes = ["cloud-platform"]
-  }
 }
-
-resource "google_compute_region_instance_group_manager" "neo4j" {
-  name                      = "${var.goog_cm_deployment_name}-instance-group-manager"
-  distribution_policy_zones = var.zones
-  target_size               = var.node_count
-  base_instance_name        = var.goog_cm_deployment_name
-
-  version {
-    instance_template = google_compute_instance_template.neo4j.id
-  }
-}
-
-##########################################
-####### Network
-##########################################
 
 resource "google_compute_firewall" "neo4j" {
   name    = "${var.goog_cm_deployment_name}"

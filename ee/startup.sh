@@ -52,7 +52,11 @@ else
   COREMEMBERS=""
   INSTANCES=$(gcloud compute instance-groups list-instances $goog_cm_deployment_name-instance-group-manager --region us-central1 --format="value(NAME)")
   for INSTANCE in $INSTANCES; do
-    COREMEMBERS+=$(gcloud compute instances list --format="value(networkInterfaces[0].networkIP)" --filter="name=( '$INSTANCE' )")
+    NODE_NAME="neo4j-${goog_cm_deployment_name}-$i"
+    #NODE_IP=$(getent hosts $NODE_NAME.c.$project_id.internal | awk '{ print $1 }')
+    NODE_IP=$(getent hosts $NODE_NAME.c.$project_id.internal | awk '{ print $1 }')
+
+    COREMEMBERS+=$NODE_IP
     COREMEMBERS+=":6000,"
   done
 
@@ -61,6 +65,7 @@ else
     exit 1
   fi
 
+  # Remove trailing comma from the list of core members
   COREMEMBERS=$${COREMEMBERS::-1}
   echo COREMEMBERS: $COREMEMBERS
 
