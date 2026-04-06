@@ -50,7 +50,7 @@ nodeCount=3
 
 for i in {0..$nodeCount}; do
   NODE_NAME="${goog_cm_deployment_name}-instance-$i"
-  COREMEMBERS+="$NODE_IP:6000,"
+  COREMEMBERS+="$NODE_NAME:6000,"
 done
 
 # Remove trailing comma from the list of core members
