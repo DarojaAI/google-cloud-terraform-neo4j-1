@@ -63,7 +63,7 @@ spec:
         varType: integer
         defaultValue: 100
     outputs:
-      - name: neo4j_http_url
-        description: URL to access Neo4j Browser via load balancer
+      - name: neo4j_browser_url
+        description: Neo4j Browser URL
       - name: neo4j_bolt_endpoint
-        description: Bolt endpoint for Neo4j connections via load balancer
+        description: Neo4j Bolt Endpoint
