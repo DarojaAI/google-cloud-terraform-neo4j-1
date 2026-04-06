@@ -5,5 +5,5 @@ output "neo4j_browser_url" {
 
 output "neo4j_bolt_endpoint" {
   description = "Neo4j Bolt Endpoint"
-  value       = "http://${google_compute_instance.neo4j[0].network_interface[0].access_config[0].nat_ip}:7687"
+  value       = "bolt://${google_compute_instance.neo4j[0].network_interface[0].access_config[0].nat_ip}:7687"
 }
