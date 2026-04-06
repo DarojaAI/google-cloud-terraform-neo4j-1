@@ -50,7 +50,8 @@ else
 
   for ((i=0; i<$nodeCount; i++)); do
     NODE_NAME="${goog_cm_deployment_name}-instance-$i"
-    COREMEMBERS+="$NODE_NAME:6000,"
+    NODE_IP=$(getent hosts $NODE_NAME | awk '{ print $1 }')
+    COREMEMBERS+="$NODE_IP:6000,"
   done
 
   # Remove trailing comma from the list of core members
