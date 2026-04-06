@@ -19,6 +19,7 @@ yum -y install neo4j-enterprise
 echo "Configuring network in neo4j.conf..."
 
 EXTERNALIP=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
+echo EXTERNALIP: $EXTERNALIP
 
 sed -i "s/#server.default_listen_address=0.0.0.0/server.default_listen_address=0.0.0.0/g" /etc/neo4j/neo4j.conf
 sed -i "s/#server.default_advertised_address=localhost/server.default_advertised_address=$EXTERNALIP/g" /etc/neo4j/neo4j.conf
@@ -34,6 +35,7 @@ else
   sed -i "s/#initial.dbms.default_primaries_count=1/initial.dbms.default_primaries_count=3/g" /etc/neo4j/neo4j.conf
 
   INTERNALIP=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/ip)
+  echo INTERNALIP: $INTERNALIP
 
   sed -i "s/#server.cluster.listen_address=:6000/server.cluster.listen_address=0.0.0.0:6000/g" /etc/neo4j/neo4j.conf
   sed -i "s/#server.cluster.advertised_address=:6000/server.cluster.advertised_address=$INTERNALIP:6000/g" /etc/neo4j/neo4j.conf
@@ -44,18 +46,16 @@ else
 
   echo "Configuring membership in neo4j.conf..."
 
-COREMEMBERS=""
-goog_cm_deployment_name=neo4j-tf
-nodeCount=3
+  COREMEMBERS=""
 
-for i in {0..$nodeCount}; do
-  NODE_NAME="${goog_cm_deployment_name}-instance-$i"
-  COREMEMBERS+="$NODE_NAME:6000,"
-done
+  for i in $${0..$nodeCount}; do
+    NODE_NAME="${goog_cm_deployment_name}-instance-$i"
+    COREMEMBERS+="$NODE_NAME:6000,"
+  done
 
-# Remove trailing comma from the list of core members
-COREMEMBERS=$${COREMEMBERS::-1}
-echo COREMEMBERS: $COREMEMBERS
+  # Remove trailing comma from the list of core members
+  COREMEMBERS=$${COREMEMBERS::-1}
+  echo COREMEMBERS: $COREMEMBERS
 
   sed -i "s/#dbms.cluster.endpoints=localhost:6000,localhost:6001,localhost:6002/dbms.cluster.endpoints=$COREMEMBERS/g" /etc/neo4j/neo4j.conf
 fi
