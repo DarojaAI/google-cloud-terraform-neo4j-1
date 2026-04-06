@@ -48,7 +48,7 @@ spec:
           title: Machine type
           xGoogleProperty:
             type: ET_GCE_MACHINE_TYPE
-            zoneProperty: zone
+            zoneProperty: zones[0]
             gceMachineType:
               minCpu: 4
               minRamGb: 16
