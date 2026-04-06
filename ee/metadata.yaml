@@ -53,13 +53,13 @@ spec:
       - name: zones
         description: The zones for the solution to be deployed.
         varType: list(string)
-        defaultValue: ["us-central1-a", "us-central1-b", "us-central1-c", "us-central1-f"]
+        defaultValue: ["us-central1-a", "us-central1-b", "us-central1-c"]
       - name: password
         description: Password for the Neo4j admin user
         varType: string
         required: true
       - name: node_count
-        description: Number of Neo4j nodes to deploy (1 for standalone, 3-7 for cluster)
+        description: Number of Neo4j nodes to deploy
         varType: integer
         defaultValue: 3
       - name: machine_type
