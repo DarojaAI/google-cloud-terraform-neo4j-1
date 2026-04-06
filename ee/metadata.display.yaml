@@ -50,4 +50,3 @@ spec:
           name: disk_size
           title: Disk size in GB
           max: 10000
-          section: storage
