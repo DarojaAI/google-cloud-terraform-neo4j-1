@@ -16,7 +16,7 @@ Now let's make a clone of this repo:
     git clone https://github.com/neo4j-partners/google-cloud-terraform-neo4j.git
     cd google-cloud-terraform-neo4j
 
-Pick either ce or ee.  Go to the appropriate director.  For this example, I'll use ee:
+Pick either ce or ee.  Go to the appropriate directory.  For this example, I'll use ee:
 
     cd ee
 
@@ -33,7 +33,7 @@ If that looks good, you can run apply:
     terraform apply
 
 ## Deleting your Deployment
-To delete your deployment you can either run:
+To delete your deployment run:
 
     terraform destroy
 
