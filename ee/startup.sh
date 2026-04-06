@@ -48,7 +48,7 @@ else
 
   COREMEMBERS=""
 
-  for i in $${0..$nodeCount}; do
+  for ((i=0; i<$nodeCount; i++)); do
     NODE_NAME="${goog_cm_deployment_name}-instance-$i"
     COREMEMBERS+="$NODE_NAME:6000,"
   done

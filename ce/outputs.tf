@@ -1,9 +1,9 @@
-output "neo4j_http_url" {
-  description = "URL to access Neo4j Browser via load balancer"
+output "neo4j_browser_url" {
+  description = "Neo4j Browser URL"
   value       = "http://${google_compute_instance.neo4j.network_interface.0.access_config.0.nat_ip}:7474"
 }
 
 output "neo4j_bolt_endpoint" {
-  description = "Bolt endpoint for Neo4j connections via load balancer"
+  description = "Neo4j Bolt Endpoint"
   value       = "bolt://${google_compute_instance.neo4j.network_interface.0.access_config.0.nat_ip}:7687"
 }
