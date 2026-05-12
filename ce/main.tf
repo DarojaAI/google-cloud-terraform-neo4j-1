@@ -33,7 +33,7 @@ resource "google_compute_instance" "neo4j" {
     initialize_params {
       image = var.source_image
       size  = var.disk_size
-      type  = "hyperdisk-balanced"
+      type  = "pd-ssd"
     }
   }
 
