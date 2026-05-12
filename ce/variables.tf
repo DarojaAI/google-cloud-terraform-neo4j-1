@@ -72,3 +72,8 @@ variable "labels" {
   type        = map(string)
   default     = {}
 }
+variable "subnet_cidr" {
+  description = "CIDR range of the subnet, used for internal firewall source_ranges. Required when subnet_id is set."
+  type        = string
+  default     = ""
+}

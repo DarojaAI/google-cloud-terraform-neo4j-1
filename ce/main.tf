@@ -72,13 +72,14 @@ resource "google_compute_instance" "neo4j" {
 ####### Firewall Rules
 ##########################################
 
-# Internal firewall for custom VPC (restrictive - source tags)
+# Internal firewall: allow VPC subnet traffic in to Neo4j ports
 resource "google_compute_firewall" "neo4j_internal" {
   count   = local.use_custom_vpc ? 1 : 0
   name    = "${var.goog_cm_deployment_name}-internal"
   network = var.network_id
 
-  source_tags = ["neo4j"]
+  # Allow traffic from the entire VPC subnet (postgres VM, Cloud Run, etc.)
+  source_ranges = var.subnet_cidr != "" ? [var.subnet_cidr] : ["10.0.0.0/8"]
 
   allow {
     protocol = "tcp"
@@ -92,10 +93,10 @@ resource "google_compute_firewall" "neo4j_internal" {
   }
 }
 
-# External firewall for default network or when external IP is enabled
-resource "google_compute_firewall" "neo4j" {
+# External firewall: only created when not on custom VPC, or when external IP explicitly enabled
+resource "google_compute_firewall" "neo4j_external" {
   count   = !local.use_custom_vpc || var.assign_external_ip ? 1 : 0
-  name    = "${var.goog_cm_deployment_name}"
+  name    = "${var.goog_cm_deployment_name}-firewall"
   network = local.use_custom_vpc ? var.network_id : "default"
 
   source_ranges = ["0.0.0.0/0"]
