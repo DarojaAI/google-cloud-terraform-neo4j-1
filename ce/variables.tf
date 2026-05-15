@@ -3,72 +3,77 @@
 ##########################################
 
 variable "project_id" {
-  description = "The GCP project ID where resources will be created"
+  description = "The GCP project ID"
   type        = string
+}
+
+variable "zone" {
+  description = "GCP zone for deployment"
+  type        = string
+  default     = "us-central1-b"
 }
 
 variable "goog_cm_deployment_name" {
-  description = "The name of the deployment and VM instance."
-  type        = string
-}
-
-variable "source_image" {
-  description = "Base image for the VM instance."
-  type        = string
-  default     = "projects/neo4j-mp-public/global/images/neo4j-community-edition-v20260126"
-}
-
-##########################################
-####### Deployment Specific Variables
-##########################################
-
-variable "zone" {
-  description = "The GCP zone where resources will be created"
+  description = "Deployment name"
   type        = string
 }
 
 variable "password" {
-  description = "Password for Neo4j"
+  description = "Neo4j password"
   type        = string
   sensitive   = true
 }
 
 variable "machine_type" {
-  description = "GCP machine type for Neo4j nodes"
+  description = "GCP machine type"
   type        = string
-  default     = "n4-standard-4"
+  default     = "e2-medium"
 }
 
 variable "disk_size" {
-  description = "Size of the data disk in GB"
+  description = "Boot disk size in GB"
   type        = number
   default     = 100
 }
 
-##########################################
-####### VPC Configuration (Optional)
-##########################################
+variable "source_image" {
+  description = "Source image for the VM"
+  type        = string
+  default     = "rocky-linux-cloud/rocky-linux-9"
+}
+
+variable "labels" {
+  description = "Labels to apply to resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "assign_external_ip" {
+  description = "Assign an external IP to the VM"
+  type        = bool
+  default     = false
+}
 
 variable "subnet_id" {
-  description = "Subnet ID (name) for VM placement. If provided, deploys to custom VPC instead of default."
+  description = "Subnet ID for custom VPC"
   type        = string
   default     = ""
 }
 
 variable "network_id" {
-  description = "VPC network ID (self-link) for firewall rules. Required when subnet_id is set."
+  description = "Network ID for custom VPC"
   type        = string
   default     = ""
 }
 
-variable "assign_external_ip" {
-  description = "Assign external IP. If false, VM is private and uses Cloud NAT for egress."
-  type        = bool
-  default     = true
+variable "subnet_cidr" {
+  description = "Subnet CIDR for firewall rules"
+  type        = string
+  default     = ""
 }
 
-variable "labels" {
-  description = "Labels to apply to all resources"
-  type        = map(string)
-  default     = {}
+variable "enable_vpc" {
+  description = "Enable custom VPC mode. When true, uses subnet_id/network_id for VPC networking. When false, uses default network."
+  type        = bool
+  default     = false
 }

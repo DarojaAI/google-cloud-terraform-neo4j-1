@@ -3,7 +3,9 @@ provider "google" {
 }
 
 locals {
-  use_custom_vpc = var.subnet_id != "" && var.network_id != ""
+  # Derived flag for backwards compatibility: if enable_vpc not explicitly set,
+  # fall back to the old subnet_id + network_id check.
+  use_custom_vpc = var.enable_vpc || (var.subnet_id != "" && var.network_id != "")
 }
 
 ##########################################
@@ -11,7 +13,7 @@ locals {
 ##########################################
 
 resource "google_compute_address" "neo4j_internal" {
-  count        = local.use_custom_vpc ? 1 : 0
+  count        = var.enable_vpc ? 1 : 0
   name         = "${var.goog_cm_deployment_name}-internal-ip"
   address_type = "INTERNAL"
   subnetwork   = var.subnet_id
@@ -74,7 +76,7 @@ resource "google_compute_instance" "neo4j" {
 
 # Internal firewall for custom VPC (restrictive - source tags)
 resource "google_compute_firewall" "neo4j_internal" {
-  count   = local.use_custom_vpc ? 1 : 0
+  count   = var.enable_vpc ? 1 : 0
   name    = "${var.goog_cm_deployment_name}-internal"
   network = var.network_id
 
@@ -94,7 +96,7 @@ resource "google_compute_firewall" "neo4j_internal" {
 
 # External firewall for default network or when external IP is enabled
 resource "google_compute_firewall" "neo4j" {
-  count   = !local.use_custom_vpc || var.assign_external_ip ? 1 : 0
+  count   = !var.enable_vpc || var.assign_external_ip ? 1 : 0
   name    = "${var.goog_cm_deployment_name}"
   network = local.use_custom_vpc ? var.network_id : "default"
 
