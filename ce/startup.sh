@@ -15,6 +15,8 @@ yum -y install neo4j
 
 echo "Configuring network in neo4j.conf..."
 sed -i "s/#server.default_listen_address=0.0.0.0/server.default_listen_address=0.0.0.0/g" /etc/neo4j/neo4j.conf
+sed -i "s/#server.bolt.listen_address=localhost/server.bolt.listen_address=0.0.0.0/g" /etc/neo4j/neo4j.conf
+sed -i "s/^#server.bolt.enabled=true/server.bolt.enabled=true/g" /etc/neo4j/neo4j.conf
 
 echo "Starting Neo4j..."
 neo4j-admin dbms set-initial-password "$password"
