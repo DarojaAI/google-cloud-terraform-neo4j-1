@@ -67,6 +67,29 @@ resource "google_compute_instance" "neo4j" {
 
   lifecycle {
     create_before_destroy = true
+
+    # The boot_disk's `type` (currently `hyperdisk-balanced`) was
+    # added to this module in commit 4850457 (fix(ce): configure
+    # bolt connector). VMs provisioned by an earlier version of
+    # this module may have a different boot_disk.type (e.g.
+    # `pd-standard`), and changing the type `forces replacement`
+    # of the VM — which destroys data. For brown-field imports
+    # where the existing VM is preserved, the operator needs the
+    # plan to converge to "no changes" without manually migrating
+    # the disk type. `ignore_changes = [boot_disk]` lets the
+    # module's stated intent (`hyperdisk-balanced`) stand for new
+    # VMs while accepting the existing disk's attributes for
+    # imported VMs.
+    #
+    # Tracking:
+    #   - DarojaAI/rag_research_tool#799 (consumer wiring)
+    #   - DarojaAI/infra-actions#92 (import-id fix, v1.17.1)
+    #   - DarojaAI/infra-actions#96 (pre-flight gate, v1.19.0)
+    #   - DarojaAI/infra-actions#98 (pre-flight pin fix, v1.19.2)
+    #   - DarojaAI/infra-actions#99 (composite pin bump, v1.19.3)
+    #   - DarojaAI/rag_research_tool#806 (wiki pre-flight gate)
+    #   - DarojaAI/rag_research_tool#807 (consumer pin bump v1.19.3)
+    ignore_changes = [boot_disk]
   }
 }
 
